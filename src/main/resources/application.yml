@@ -1,0 +1,4 @@
+
+redis-properties: ../properties.json
+beetl:
+  suffix: html

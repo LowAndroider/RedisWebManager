@@ -1,0 +1,75 @@
+<%
+layout("/container.html") { %>
+<div class="layui-col-md6">
+    <div class="layui-card">
+        <div class="layui-card-header"></div>
+        <div id="test1" class=""></div>
+    </div>
+</div>
+
+<script>
+    layui.use(['tree', 'util'], function(){
+        var tree = layui.tree,
+            layer = layui.layer,
+            util = layui.util,
+            //模拟数据1
+            data1 = [{
+                title: '江西',
+                id: 1,
+                type: 1,
+                children: [{
+                    title: '南昌',
+                    type: 2
+                    ,id: 1000
+                    ,children: [{
+                        title: '青山湖区'
+                        ,id: 10001
+                    },{
+                        title: '高新区'
+                        ,id: 10002
+                    }]
+                },{
+                    title: '九江'
+                    ,id: 1001
+                },{
+                    title: '赣州'
+                    ,id: 1002
+                }]
+            },{
+                title: '广西'
+                ,id: 2
+                ,children: [{
+                    title: '南宁'
+                    ,id: 2000
+                },{
+                    title: '桂林'
+                    ,id: 2001
+                }]
+            },{
+                title: '陕西'
+                ,id: 3
+                ,children: [{
+                    title: '西安'
+                    ,id: 3000
+                },{
+                    title: '延安'
+                    ,id: 3001
+                }]
+            }];
+
+        var clickFun = function(obj) {
+            console.log(obj.data);
+            console.log(obj.state);
+            console.log(obj.elem);
+        }
+
+        //常规用法
+        tree.render({
+            elem: '#test1' //默认是点击节点可进行收缩
+            ,data: data1
+            ,click: clickFun
+        });
+    });
+
+</script>
+<% } %>
