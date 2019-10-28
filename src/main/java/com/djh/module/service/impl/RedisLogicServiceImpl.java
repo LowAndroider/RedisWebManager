@@ -7,6 +7,7 @@ import com.djh.module.service.RedisLogicService;
 import com.djh.module.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 
 import java.io.File;
@@ -31,13 +32,13 @@ public class RedisLogicServiceImpl implements RedisLogicService {
     public void loginRedis(RedisConnectionInfo loginInfo) throws Exception{
 
         // 判断有没有重复name的连接
-        if (redisInfoMap.get(loginInfo.name) != null) {
+        if (redisInfoMap.get(loginInfo.getName()) != null) {
             throw new Exception("重复的连接名称！");
         }
 
-        Jedis jedis = new Jedis(loginInfo.host, loginInfo.port);
-        if (loginInfo.auth != null) {
-            jedis.auth(loginInfo.auth);
+        Jedis jedis = new Jedis(loginInfo.getHost(), loginInfo.getPort());
+        if (!StringUtils.isEmpty(loginInfo.getAuth())) {
+            jedis.auth(loginInfo.getAuth());
         }
 
         String result = jedis.ping();
@@ -55,8 +56,8 @@ public class RedisLogicServiceImpl implements RedisLogicService {
      */
     private void saveConnectionInfo(RedisConnectionInfo loginInfo, Jedis jedis) throws Exception {
         // 理论上来说redisMap此时的数据跟文件内的数据是同步的
-        redisMap.put(loginInfo.name, jedis);
-        redisInfoMap.put(loginInfo.name, loginInfo);
+        redisMap.put(loginInfo.getName(), jedis);
+        redisInfoMap.put(loginInfo.getName(), loginInfo);
         // 格式化输出
         FileUtil.write(redisProperties, JSON.toJSONString(redisInfoMap, SerializerFeature.PrettyFormat));
     }

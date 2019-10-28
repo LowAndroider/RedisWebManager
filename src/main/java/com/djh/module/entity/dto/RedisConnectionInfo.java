@@ -6,21 +6,21 @@ import lombok.Data;
  * redis连接信息
  * @author Djh
  */
-
+@Data
 public class RedisConnectionInfo {
 
     /** 类型 */
-    public String type;
+    private String type;
 
     /** 名称 */
-    public String name;
+    private String name;
 
     /** ip或域名 */
-    public String host;
+    private String host;
 
     /** 端口 */
-    public int port;
+    private int port;
 
     /** 密码 */
-    public String auth;
+    private String auth;
 }
