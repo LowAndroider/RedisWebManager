@@ -1,14 +1,16 @@
 package com.djh.module.service;
 
-import com.djh.module.dto.RedisLoginInfoDTO;
+import com.djh.module.entity.dto.RedisConnectionInfo;
 
+/**
+ * @author Djh
+ */
 public interface RedisLogicService {
 
     /**
      * 连接redis
-     * @param loginInfo {@link RedisLoginInfoDTO}
-     * @return 是否连接成功
+     * @param loginInfo {@link RedisConnectionInfo}
      * @throws Exception 连接redis相关报错信息
      */
-    boolean loginRedis(RedisLoginInfoDTO loginInfo) throws Exception;
+    void loginRedis(RedisConnectionInfo loginInfo) throws Exception;
 }

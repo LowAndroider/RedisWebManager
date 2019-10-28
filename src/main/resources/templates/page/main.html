@@ -1,5 +1,14 @@
 <%
 layout("/container.html") { %>
+
+<div class="layui-col-md12">
+    <ul class="layui-nav" lay-filter="">
+        <li class="layui-nav-item">
+            <button type="button" class="layui-btn" onclick="openAddConn()">添加新的连接信息</button>
+        </li>
+    </ul>
+</div>
+
 <div class="layui-col-md6">
     <div class="layui-card">
         <div class="layui-card-header"></div>
@@ -8,6 +17,20 @@ layout("/container.html") { %>
 </div>
 
 <script>
+    var layer;
+    layui.use('layer', function(){
+        layer = layui.layer;
+    });
+
+    function openAddConn() {
+        layer.open({
+            type: 2,
+            title: "连接信息",
+            area: ['451px', '270px'],
+            content: "addConn"
+        });
+    }
+
     layui.use(['tree', 'util'], function(){
         var tree = layui.tree,
             layer = layui.layer,
@@ -61,7 +84,7 @@ layout("/container.html") { %>
             console.log(obj.data);
             console.log(obj.state);
             console.log(obj.elem);
-        }
+        };
 
         //常规用法
         tree.render({

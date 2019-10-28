@@ -1,0 +1,61 @@
+<%
+layout("/container.html") { %>
+<form class="layui-form" action="/redisLogin" method="get" style="margin-top: 10px;">
+    <input hidden name="type" value="${type}" />
+    <div class="layui-form-item">
+        <label class="layui-form-label">连接名称</label>
+        <div class="layui-input-block" style="width: 280px;">
+            <input type="text" name="title" required  lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">host和port</label>
+        <div class="layui-input-inline" style="width: 200px;">
+            <input type="text" name="host" required lay-verify="required" placeholder="host" autocomplete="off" class="layui-input">
+        </div>
+        <div class="layui-input-inline" style="width: 70px">
+            <input  type="text" name="port" value="6397" placeholder="port" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <div class="layui-input-inline" style="width: 280px">
+            <input type="password" name="auth" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">确定</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    //Demo
+    layui.use('form', function(){
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+            var url = data.form.action;
+            var type = data.form.method;
+            $.ajax({
+                type: type,
+                url: url,
+                data: data.field,
+                async: true,
+                success: function (d) {
+                    if (d.code === 200) {
+                        parent.layer.close(layer.index);
+                    }
+                    parent.layer.msg(d.msg);
+                }
+            });
+
+            return false;
+        });
+    });
+</script>
+
+<% } %>

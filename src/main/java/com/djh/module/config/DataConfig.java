@@ -2,6 +2,7 @@ package com.djh.module.config;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.djh.module.entity.dto.RedisConnectionInfo;
 import com.djh.module.util.FileUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,22 +15,30 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Djh
+ */
 @Component
 public class DataConfig {
 
     @Value("${redis-properties}")
     private String filePath;
 
-    @Bean("redisMap")
-    public Map<String, Jedis> redisMap(@Qualifier("redisProperties") File redisProperties) throws Exception {
-        Map<String, Jedis> redisMap = new HashMap<>();
+    @Bean("redisInfoMap")
+    public Map<String, RedisConnectionInfo> redisInfoMap(@Qualifier("redisProperties") File redisProperties) throws Exception {
+        Map<String, RedisConnectionInfo> redisMap = new HashMap<>();
         String read = FileUtil.read(redisProperties);
         if (!StringUtils.isEmpty(read)) {
-            redisMap = JSON.parseObject(read, new TypeReference<Map<String, Jedis>>() {
+            redisMap = JSON.parseObject(read, new TypeReference<Map<String, RedisConnectionInfo>>() {
             });
         }
 
         return redisMap;
+    }
+
+    @Bean("redisMap")
+    public Map<String, Jedis> redisMap() {
+        return new HashMap<>(4);
     }
 
     @Bean("redisProperties")
