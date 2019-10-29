@@ -2,6 +2,7 @@ package com.djh.module.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.djh.module.constant.Common;
 import com.djh.module.entity.dto.RedisConnectionInfo;
 import com.djh.module.service.RedisLogicService;
 import com.djh.module.util.FileUtil;
@@ -19,14 +20,20 @@ import java.util.Map;
 @Service("redisLogicService")
 public class RedisLogicServiceImpl implements RedisLogicService {
 
-    @Autowired
+    /** redis连接实例map */
     private Map<String, Jedis> redisMap;
-
-    @Autowired
+    /** redis连接信息map */
     private Map<String, RedisConnectionInfo> redisInfoMap;
+    /** redis连接信息保存的文件 */
+    private File redisProperties;
 
     @Autowired
-    private File redisProperties;
+    public RedisLogicServiceImpl(Map<String, Jedis> redisMap, Map<String, RedisConnectionInfo> redisInfoMap,
+                                 File redisProperties) {
+        this.redisMap = redisMap;
+        this.redisInfoMap = redisInfoMap;
+        this.redisProperties = redisProperties;
+    }
 
     @Override
     public void loginRedis(RedisConnectionInfo loginInfo) throws Exception{
@@ -42,12 +49,17 @@ public class RedisLogicServiceImpl implements RedisLogicService {
         }
 
         String result = jedis.ping();
-        if (!"PONG".equalsIgnoreCase(result)) {
+        if (!Common.PONE.equalsIgnoreCase(result)) {
             throw new Exception("连接失败，请检查连接信息后重试");
         }
 
         saveConnectionInfo(loginInfo, jedis);
 
+    }
+
+    @Override
+    public Map<String, RedisConnectionInfo> redisConnList() {
+        return redisInfoMap;
     }
 
     /**
@@ -57,6 +69,8 @@ public class RedisLogicServiceImpl implements RedisLogicService {
     private void saveConnectionInfo(RedisConnectionInfo loginInfo, Jedis jedis) throws Exception {
         // 理论上来说redisMap此时的数据跟文件内的数据是同步的
         redisMap.put(loginInfo.getName(), jedis);
+        // 更新redis信息类型，1为已保存，
+        loginInfo.setType("1");
         redisInfoMap.put(loginInfo.getName(), loginInfo);
         // 格式化输出
         FileUtil.write(redisProperties, JSON.toJSONString(redisInfoMap, SerializerFeature.PrettyFormat));

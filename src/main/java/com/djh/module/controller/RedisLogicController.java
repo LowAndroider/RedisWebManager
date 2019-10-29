@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Map;
 
 /**
@@ -15,13 +16,23 @@ import java.util.Map;
 @RestController
 public class RedisLogicController {
 
-    @Autowired
     private RedisLogicService redisLogicService;
 
-    @GetMapping("/redisLogin")
-    public R redisLogin(RedisConnectionInfo redisLoginInfoDTO) throws Exception {
-        redisLogicService.loginRedis(redisLoginInfoDTO);
+    @Autowired
+    public RedisLogicController(RedisLogicService redisLogicService) {
+        this.redisLogicService = redisLogicService;
+    }
 
+
+    @GetMapping("/redisLogin")
+    public R redisLogin(@Valid RedisConnectionInfo redisLoginInfoDTO) throws Exception {
+        redisLogicService.loginRedis(redisLoginInfoDTO);
         return R.success("连接成功", null);
+    }
+
+    @GetMapping("/redisConnList")
+    public R redisConnList() {
+        Map<String, RedisConnectionInfo> redisConnInfo = redisLogicService.redisConnList();
+        return R.success(redisConnInfo);
     }
 }
