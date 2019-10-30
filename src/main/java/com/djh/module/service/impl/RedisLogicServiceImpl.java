@@ -2,6 +2,7 @@ package com.djh.module.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.djh.module.constant.Common;
 import com.djh.module.entity.dto.RedisConnectionInfo;
 import com.djh.module.service.RedisLogicService;
 import com.djh.module.util.FileUtil;
@@ -46,7 +47,7 @@ public class RedisLogicServiceImpl implements RedisLogicService {
         }
 
         String result = jedis.ping();
-        if (!"PONG".equalsIgnoreCase(result)) {
+        if (!Common.PONE.equalsIgnoreCase(result)) {
             throw new Exception("连接失败，请检查连接信息后重试");
         }
 
@@ -75,6 +76,8 @@ public class RedisLogicServiceImpl implements RedisLogicService {
     private void saveConnectionInfo(RedisConnectionInfo loginInfo, Jedis jedis) throws Exception {
         // 理论上来说redisMap此时的数据跟文件内的数据是同步的
         redisMap.put(loginInfo.getName(), jedis);
+        // 更新redis信息类型，1为已保存，
+        loginInfo.setType("1");
         redisInfoMap.put(loginInfo.getName(), loginInfo);
         // 格式化输出
         FileUtil.write(redisProperties, JSON.toJSONString(redisInfoMap, SerializerFeature.PrettyFormat));

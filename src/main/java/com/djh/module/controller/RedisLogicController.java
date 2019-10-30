@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import javax.validation.Valid;
 import java.util.Map;
 
 
@@ -25,9 +26,8 @@ public class RedisLogicController {
     }
 
     @GetMapping("/redisLogin")
-    public R redisLogin(RedisConnectionInfo redisLoginInfoDTO) throws Exception {
+    public R redisLogin(@Valid RedisConnectionInfo redisLoginInfoDTO) throws Exception {
         redisLogicService.loginRedis(redisLoginInfoDTO);
-
         return R.success("连接成功", null);
     }
 
