@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 
 import java.io.File;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Djh
@@ -19,14 +19,18 @@ import java.util.Map;
 @Service("redisLogicService")
 public class RedisLogicServiceImpl implements RedisLogicService {
 
-    @Autowired
     private Map<String, Jedis> redisMap;
 
-    @Autowired
     private Map<String, RedisConnectionInfo> redisInfoMap;
 
-    @Autowired
     private File redisProperties;
+
+    @Autowired
+    public RedisLogicServiceImpl(Map<String, Jedis> redisMap, Map<String, RedisConnectionInfo> redisInfoMap, File redisProperties) {
+        this.redisMap = redisMap;
+        this.redisInfoMap = redisInfoMap;
+        this.redisProperties = redisProperties;
+    }
 
     @Override
     public void loginRedis(RedisConnectionInfo loginInfo) throws Exception{
@@ -48,6 +52,20 @@ public class RedisLogicServiceImpl implements RedisLogicService {
 
         saveConnectionInfo(loginInfo, jedis);
 
+    }
+
+    @Override
+    public List<Map<String, Object>> getRedisInfoList() {
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Map.Entry<String, RedisConnectionInfo> next : redisInfoMap.entrySet()) {
+            RedisConnectionInfo value = next.getValue();
+            Map<String, Object> map = new HashMap<>(8);
+            map.put("title", value.getName());
+            map.put("id", value.getName());
+            result.add(map);
+        }
+
+        return result;
     }
 
     /**
