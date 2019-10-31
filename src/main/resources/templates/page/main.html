@@ -5,14 +5,23 @@ layout("/container.html") { %>
     <ul class="layui-nav" lay-filter="">
         <li class="layui-nav-item">
             <button type="button" class="layui-btn" onclick="openAddConn()">添加新的连接信息</button>
+            <button type="button" class="layui-btn" onclick="reLoadConnInfo()">刷新连接列表</button>
         </li>
     </ul>
 </div>
 
-<div class="layui-col-md6">
-    <div class="layui-card">
-        <div class="layui-card-header">连接列表</div>
-        <div id="test1" class=""></div>
+<div style="padding: 20px;" class="layui-col-md12">
+    <div class="layui-col-md3">
+        <div class="layui-card">
+            <div class="layui-card-header">连接列表</div>
+            <div class="layui-card-body">
+                <table id="test1"></table>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-col-md3">
+        <table class="layui-hide" id="test" lay-filter="test"></table>
     </div>
 </div>
 
@@ -20,8 +29,40 @@ layout("/container.html") { %>
     var layer;
     var tree;
     var util;
-    layui.use('layer', function(){
+    var table;
+
+    layui.use(['tree', 'util', 'table', 'layer'], function(){
+        tree = layui.tree;
+        util = layui.util;
+        table = layui.table;
         layer = layui.layer;
+
+        table.render({
+            elem: '#test1'
+            ,id: 'redisConnTable' // 默认是elem所指定元素的id，
+            ,url: '/redisConnList'
+            ,cols: [[
+                // 此处如果不加width，会出现一些奇怪的东西
+                {field:'name', title: '名称', width: 100, sort: false}
+            ]]
+            ,parseData: function(res) {
+                return {
+                    'code': res.code
+                    ,'msg': res.msg
+                    ,'data': res.data
+                }
+            }
+            ,response: {
+                statusCode: 200 //默认成功的状态码是0
+            }
+        });
+
+        table.on('row(test1)', function (obj) {
+            console.log("111");
+        });
+
+        // js设置样式，必须得先获取dom元素，所以必须得在表格加载之后调整
+        $('div[lay-id=redisConnTable]>.layui-table-box>.layui-table-header').css('display', 'none');
     });
 
     function openAddConn() {
@@ -32,30 +73,11 @@ layout("/container.html") { %>
             content: "addConn"
         });
     }
-
-    layui.use(['tree', 'util'], function(){
-        tree = layui.tree;
-        util = layui.util;
-    });
-
-    $.ajax({
-        type: 'get',
-        url: "/redisConnList",
-        async: true,
-        success: function (d) {
-            //常规用法
-            tree.render({
-                elem: '#test1' //默认是点击节点可进行收缩
-                ,data: d.data
-                ,click: clickFun
-                ,id: 'redisConnList'
-            });
-        }
-    });
-
-    function clickFun(obj) {
-
+    
+    function reLoadConnInfo() {
+        // 刷新列表数据后还得重新设置数据
+        table.reload('redisConnTable');
+        $('div[lay-id=redisConnTable]>.layui-table-box>.layui-table-header').css('display', 'none');
     }
-
 </script>
 <% } %>

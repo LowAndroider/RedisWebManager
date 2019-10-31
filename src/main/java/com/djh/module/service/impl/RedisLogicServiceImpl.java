@@ -56,14 +56,11 @@ public class RedisLogicServiceImpl implements RedisLogicService {
     }
 
     @Override
-    public List<Map<String, Object>> getRedisInfoList() {
-        List<Map<String, Object>> result = new ArrayList<>();
+    public List<RedisConnectionInfo> getRedisInfoList() {
+        List<RedisConnectionInfo> result = new ArrayList<>();
         for (Map.Entry<String, RedisConnectionInfo> next : redisInfoMap.entrySet()) {
             RedisConnectionInfo value = next.getValue();
-            Map<String, Object> map = new HashMap<>(8);
-            map.put("title", value.getName());
-            map.put("id", value.getName());
-            result.add(map);
+            result.add(value);
         }
 
         return result;

@@ -33,7 +33,7 @@ public class RedisLogicController {
 
     @GetMapping("/redisConnList")
     public R redisInfo() {
-        List<Map<String, Object>> resultList = redisLogicService.getRedisInfoList();
+        List<RedisConnectionInfo> resultList = redisLogicService.getRedisInfoList();
         return R.success(resultList);
     }
 }

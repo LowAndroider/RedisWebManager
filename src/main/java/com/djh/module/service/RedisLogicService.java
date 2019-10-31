@@ -18,8 +18,8 @@ public interface RedisLogicService {
     void loginRedis(RedisConnectionInfo loginInfo) throws Exception;
 
     /**
-     * 获取连接信息,并转为layui的节点信息
+     * 获取连接信息
      * @return 连接信息
      */
-    List<Map<String, Object>> getRedisInfoList();
+    List<RedisConnectionInfo> getRedisInfoList();
 }
