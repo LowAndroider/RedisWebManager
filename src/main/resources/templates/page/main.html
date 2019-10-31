@@ -15,13 +15,9 @@ layout("/container.html") { %>
         <div class="layui-card">
             <div class="layui-card-header">连接列表</div>
             <div class="layui-card-body">
-                <table id="test1"></table>
+                <table id="redisList" lay-filter="redisList"></table>
             </div>
         </div>
-    </div>
-
-    <div class="layui-col-md3">
-        <table class="layui-hide" id="test" lay-filter="test"></table>
     </div>
 </div>
 
@@ -38,7 +34,7 @@ layout("/container.html") { %>
         layer = layui.layer;
 
         table.render({
-            elem: '#test1'
+            elem: '#redisList'
             ,id: 'redisConnTable' // 默认是elem所指定元素的id，
             ,url: '/redisConnList'
             ,cols: [[
@@ -57,8 +53,9 @@ layout("/container.html") { %>
             }
         });
 
-        table.on('row(test1)', function (obj) {
-            console.log("111");
+        table.on('rowRightClick(redisList)', function (obj) {
+            var e = event || window.event;
+            e.preventDefault();
         });
 
         // js设置样式，必须得先获取dom元素，所以必须得在表格加载之后调整
